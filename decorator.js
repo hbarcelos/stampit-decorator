@@ -1,31 +1,49 @@
 const stampit = require('@stamp/it');
 
 const Decorator = stampit({
+  name: 'Decorator',
   statics: {
-    decorateMethods() {
-      return this;
+    decorateMethods(descriptors = {}) {
+      const decoratedMethodsControl = {};
+
+      return Object.keys(descriptors || {}).reduce((acc, name) => {
+        const decorator = descriptors[name];
+
+        return acc.composers(({ stamp }) => {
+          const { [name]: decoratee } = stamp.compose.methods || {};
+
+          if (!decoratee || decoratedMethodsControl[name]) return;
+
+          decoratedMethodsControl[name] = true;
+
+          function decoratedMethod(...args) {
+            const detachedDecoratee = decoratee.bind(this);
+            return decorator.apply(this, [
+              {
+                decoratee: detachedDecoratee,
+                stamp,
+              },
+              ...args,
+            ]);
+          }
+
+          const decoratorName = decorator.name || '<anonymous>';
+          const decorateeName = decoratee.name || '<anonymous>';
+
+          Object.defineProperties(decoratedMethod, {
+            name: {
+              value: `${decoratorName}(${decorateeName})`,
+            },
+          });
+
+          Object.assign(stamp.compose.methods, {
+            [name]: decoratedMethod,
+          });
+        });
+      }, this);
     },
-    decorateMethod(name, fn) {
-      return this.composers(({ stamp }) => {
-        const { [name]: method } = stamp.compose.methods || {};
-
-        if (!method) return;
-
-        function methodDecorator(...args) {
-          const detachedMethod = method.bind(this);
-          return fn.apply(this, [{ decoratee: detachedMethod }, ...args]);
-        }
-
-        Object.defineProperties(methodDecorator, {
-          name: {
-            value: `decorated(${name})`,
-          },
-        });
-
-        Object.assign(stamp.compose.methods, {
-          [name]: methodDecorator,
-        });
-      });
+    decorateMethod(name, decorator) {
+      return this.decorateMethods({ [name]: decorator });
     },
   },
 });

@@ -1,11 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "legacyDecorators": true,
-      "experimentalObjectRestSpread": true
-    }
+    "ecmaVersion": 2015
   },
   "extends": [
     "airbnb-base",
@@ -16,7 +11,8 @@
     "ava"
   ],
   "env": {
-    "node": true
+    "node": true,
+    "commonjs": true
   },
   "rules": {
     "prettier/prettier": [
