@@ -1,1 +1,1 @@
-export { default } from './decorator';
+export { default } from './decorator'
