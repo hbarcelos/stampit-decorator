@@ -1,1 +1,1 @@
-export { default } from './decorator'
+module.exports = require('./decorator')
