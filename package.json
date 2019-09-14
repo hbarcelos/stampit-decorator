@@ -2,8 +2,14 @@
   "name": "@stamp/decorator",
   "version": "0.1.0",
   "description": "Decorator Pattern implementation utility using stamps.",
+  "tags": [
+    "stamps",
+    "stampit",
+    "stamp",
+    "decorator"
+  ],
   "main": "index.js",
-  "author": "Henrique Barcelos <rick.hjpbarcelos@gmail.com>",
+  "author": "Henrique Barcelos <hbarcelos909@gmail.com>",
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
